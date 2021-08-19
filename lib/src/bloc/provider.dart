@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:encaza/src/bloc/login_bloc.dart';
-export 'package:encaza/src/bloc/login_bloc.dart';
+import 'package:form_double_partners/src/bloc/form_bloc.dart';
 
 class Provider extends InheritedWidget{
 
@@ -19,13 +18,13 @@ class Provider extends InheritedWidget{
   Provider._internal({ Key? key, Widget? child })
     : super(key: key, child: child! );
 
-    final loginBloc = LoginBloc();
+    final formBloc = FormBloc();
     
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => true;
 
-  static LoginBloc of ( BuildContext context ){
-   return context.dependOnInheritedWidgetOfExactType<Provider>()!.loginBloc;
+  static FormBloc of ( BuildContext context ){
+   return context.dependOnInheritedWidgetOfExactType<Provider>()!.formBloc;
   }
   
 }
