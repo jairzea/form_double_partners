@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         // initialRoute: prefsInternal.paginaInicio(),
         routes: routes(),
         theme: ThemeData(
-          fontFamily: 'Geometria',
+          fontFamily: 'OpenSans',
           primaryColor: Colors.teal[300]
         ),
       ),

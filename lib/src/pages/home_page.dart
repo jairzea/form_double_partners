@@ -68,7 +68,12 @@ class _Home extends State<HomePage> {
         children: <Widget>[
           Text(
             'Hola, astronauta',
-              style: TextStyle(fontSize: responsive.ip(4), color: Colors.black, fontWeight: FontWeight.w800 ),
+              style: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: responsive.ip(4), 
+                color: Colors.black, 
+                fontWeight: FontWeight.w800 
+              ),
           ),
         ],
       ),
@@ -83,7 +88,7 @@ class _Home extends State<HomePage> {
         children: <Widget>[
           Text(
             'Debes registrarte primero para ingresar',
-              style: TextStyle(fontFamily: 'IndieFlower', fontSize: responsive.ip(1.4), color: Colors.grey),
+              style: TextStyle(fontSize: responsive.ip(1.4), color: Colors.grey),
             ),
         ],
       ),
@@ -102,7 +107,7 @@ class _Home extends State<HomePage> {
           children: <Widget>[
             Text(
               '¿Quieres iniciar tu viaje espacial?',
-                style: TextStyle(fontFamily: 'IndieFlower', fontSize: responsive.ip(2.1), color: Colors.blueGrey),
+                style: TextStyle(fontSize: responsive.ip(2.1), color: Colors.blueGrey),
               ),
           ],
         ),
@@ -120,16 +125,16 @@ class _Home extends State<HomePage> {
               margin: EdgeInsets.all(15),
               child: CupertinoButton(
                 padding: EdgeInsets.all(10),
-                color: Color.fromRGBO(239, 148, 80, 1),
+                color: Color.fromRGBO(40, 40, 99, 1),
                 borderRadius: BorderRadius.circular(15),
                 onPressed: () { 
                   
+                  Navigator.pushReplacementNamed(context, 'register');
                   
                 },
                 child: Text(
                   'Me encantaria!',
                   style: TextStyle(
-                    fontFamily: 'IndieFlower',
                     fontSize: responsive.ip(2), 
                     color: Colors.white,
                     fontWeight: FontWeight.w500
