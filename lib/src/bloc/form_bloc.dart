@@ -8,8 +8,8 @@ class FormBloc with Validators{
   final _lastnameController = BehaviorSubject<String>();
 
   //Recuperar los datos del Stream
-  Stream<String> get nameStream    => _nameController.stream.transform( validarEmail );
-  Stream<String> get lastnameStream => _lastnameController.stream.transform( validarPassword );
+  Stream<String> get nameStream    => _nameController.stream.transform( validarName );
+  Stream<String> get lastnameStream => _lastnameController.stream.transform( validarLastname );
 
 
   Stream<bool> get formValidStream =>

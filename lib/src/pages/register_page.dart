@@ -1,13 +1,32 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:form_double_partners/models/user_model.dart';
 import 'package:form_double_partners/src/bloc/form_bloc.dart';
 import 'package:form_double_partners/src/bloc/provider.dart';
+import 'package:form_double_partners/src/services/db_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:sweetalert/sweetalert.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
+
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+
+  String? _name = null;
+  String? _lastname = null;
+  String? _date = null;
+
+  // Este elemento podemos manejar una relación
+  // con la entrada de fecha de nacimiento
+  TextEditingController _inputFieldDateController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    
     
     return Scaffold(
       body: Stack(
@@ -63,9 +82,9 @@ class RegisterPage extends StatelessWidget {
                 SizedBox( height: 40.0 ),
                 _createName( bloc ),
                 SizedBox( height: 30.0 ),
-                _crearPasswodr( bloc ),
+                _createLastname( bloc ),
                 SizedBox( height: 30.0 ),
-                _crearDateBirth( context ),
+                _crearDateBirth( bloc, context ),
                 SizedBox( height: 30.0 ),
                 _btnIngresar( bloc )
               ],              
@@ -87,7 +106,7 @@ class RegisterPage extends StatelessWidget {
   Widget _createName(FormBloc bloc) {
 
     return StreamBuilder(
-      stream: bloc.lastnameStream,
+      stream: bloc.nameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
           padding: EdgeInsets.only(right: 30, left: 30),
@@ -99,11 +118,9 @@ class RegisterPage extends StatelessWidget {
               labelText: 'Nombre',
               counterText: snapshot.data,
               errorText: snapshot.error != null ? snapshot.error.toString() : null,
-              suffixIcon: Icon( Icons.person_rounded ),
+              suffixIcon: Icon( Icons.person, color: Colors.deepPurpleAccent ),
             ),
-            onChanged: (valor){
-              // _nombre = valor;
-            },
+            onChanged: bloc.changeName,
           ),
         );
       },
@@ -111,18 +128,17 @@ class RegisterPage extends StatelessWidget {
 
   }
 
-  Widget _crearPasswodr(FormBloc bloc) {
+  Widget _createLastname(FormBloc bloc) {
 
     return StreamBuilder(
       stream: bloc.lastnameStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.only(right: 30, left: 30),
 
           child: TextField(
-            obscureText: true,
             decoration: InputDecoration(
-              suffixIcon: Icon( Icons.accessibility ),
+              suffixIcon: Icon( Icons.accessibility, color: Colors.deepPurpleAccent  ),
               hintText: 'Escribe solo tus apellidos',
               labelText: 'Apellidos',
               counterText: snapshot.data,
@@ -135,26 +151,31 @@ class RegisterPage extends StatelessWidget {
     );    
   }
 
-  Widget _crearDateBirth( BuildContext context ) {
+  Widget _crearDateBirth(FormBloc bloc, BuildContext context ) {
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: TextField(
-        enableInteractiveSelection: false,
-        obscureText: true,
-        decoration: InputDecoration(
-          suffixIcon: Icon( Icons.perm_contact_calendar_rounded ),
-          hintText: 'Fecha de nacimiento',
-          labelText: 'Fecha de nacimiento',
-        ),
-        onTap: (){
+    // return StreamBuilder(
+    //   stream: bloc.dateStream,
+    //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return Container(
+          padding: EdgeInsets.only(right: 30, left: 30),
+          child: TextField(
+            enableInteractiveSelection: false,
+            controller: _inputFieldDateController,
+            decoration: InputDecoration(
+              suffixIcon: Icon( Icons.perm_contact_calendar_rounded, color: Colors.deepPurpleAccent  ),
+              hintText: 'Fecha de nacimiento',
+              labelText: 'Fecha de nacimiento',
+            ),
+            onTap: (){
 
-          FocusScope.of( context ).requestFocus(new FocusNode());
-          _selectDate( context );
+              FocusScope.of( context ).requestFocus(new FocusNode());
+              _selectDate( context );
 
-        },
-      ),
-    );
+            },
+          ),
+        );
+    //   }
+    // );
         
   }
 
@@ -163,9 +184,20 @@ class RegisterPage extends StatelessWidget {
     DateTime? picked = await showDatePicker(
       context: context, 
       initialDate: new DateTime.now(), 
-      firstDate: new DateTime(2018), 
-      lastDate: new DateTime(2050)
-      );
+      firstDate: new DateTime(1900), 
+      lastDate: new DateTime(2050),
+      locale: Locale('es', 'ES')
+    );
+
+    if ( picked != null ){
+      setState((){
+
+        _date = DateFormat('yyyy-MM-dd').format(picked);
+        _inputFieldDateController.text = _date!;
+
+      });
+    }
+
   }
 
   Widget _btnIngresar( FormBloc bloc ){
@@ -173,31 +205,64 @@ class RegisterPage extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.formValidStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return RaisedButton(
+        return CupertinoButton(
           child: Container(
-            padding: EdgeInsets.symmetric( horizontal: 80.0, vertical: 15.0 ),
-            child: Text('Ingresar'),
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'Registrarme',
+              style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500
+              ),
+            ),
           ), 
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0)
-          ),
-          elevation: 0.0,
-          color: Colors.cyan,
-          textColor: Colors.white,
-          onPressed: snapshot.hasData ? () => _login( bloc, context ) : null,
+          borderRadius: BorderRadius.circular(5.0),
+          color: Color.fromRGBO(65, 65, 150, 1),
+          onPressed:  snapshot.hasData ? () => _login( bloc, context ) : null,
         );
       },
     );    
   }
 
   _login( FormBloc bloc, BuildContext context ){
-
-    print('==============');
-    print('Email: ${ bloc.name }');
-    print('Password: ${ bloc.lastname }');
-    print('==============');
     
-    Navigator.pushReplacementNamed(context, 'home');
+    String fechaACtual = DateFormat('yyyy-MM-dd').format(new DateTime.now());
+
+    if( _date == null ){
+      
+      _showAlertWarning( context, "Fecha nula", "Debe seleccionar una fecha" );
+      
+      print("Fechha ACtual $fechaACtual");
+
+    }else if(fechaACtual.compareTo(_date!) <= 0){
+
+      _showAlertWarning( context, "Fecha incorrecta", "Fecha debe ser menor a la actual" );
+
+    }else{
+
+      final newUser = new UserModel(
+        nombre : bloc.name,
+        apellido : bloc.lastname,
+        fechaNacimiento : _date
+      );
+
+      DBProvider.db.saveUser( newUser ).then((value) {
+
+        if( value == 1 ){
+
+          _showAlertExit( context, "Exito", "Registro guardado exitosamente" );
+
+        }else{
+
+          _showAlertError( context, "Error", "No se pudo crear el registro" );
+
+        }
+
+      });
+      
+    }
+    
+    // Navigator.pushReplacementNamed(context, 'home');
   }
 
   Widget _crearFondo(BuildContext context){
@@ -211,7 +276,6 @@ class RegisterPage extends StatelessWidget {
         gradient: LinearGradient(
           colors: <Color>[
             Color.fromRGBO(41, 38, 91, 1.0),
-            // Color.fromRGBO(126, 190, 197, 1.0),
             Color.fromRGBO(90, 70, 178, 1.0)
           ]
         )
@@ -237,20 +301,49 @@ class RegisterPage extends StatelessWidget {
         Positioned( bottom: -50.0, left: -20.0, child: circulo ),
 
         Container(
-          padding: EdgeInsets.only(top: 70.0),
+          padding: EdgeInsets.only(top: 80.0),
           child: Column(
             children: <Widget>[
               Image(
                 image: AssetImage('assets/images/logo-dvp.png'),
                 width: 220,
               ),
-              // Icon ( Icons.door_back_outlined, color: Colors.white, size: 100.0 ),
               SizedBox( height: 5.0, width: double.infinity ),
-              // Text( 'ENCAZA', style: TextStyle( color: Colors.white, fontSize: 25.0 ))
             ],
           ),
         )
       ],
     );
   }
+
+  void _showAlertWarning( BuildContext context, String title, String description ) {
+
+    SweetAlert.show(
+      context,
+      title: title,
+      subtitle: description,
+      style: SweetAlertStyle.confirm,
+    );
+  }
+
+  void _showAlertExit( BuildContext context, String title, String description ) {
+
+    SweetAlert.show(
+      context,
+      title: title,
+      subtitle: description,
+      style: SweetAlertStyle.success,
+    );
+  }
+
+  void _showAlertError( BuildContext context, String title, String description ) {
+
+    SweetAlert.show(
+      context,
+      title: title,
+      subtitle: description,
+      style: SweetAlertStyle.error,
+    );
+  }
+  
 }

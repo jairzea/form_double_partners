@@ -2,29 +2,37 @@ import 'dart:async';
 
 class Validators {
 
-  final validarEmail = StreamTransformer<String, String>.fromHandlers(
-    handleData: ( email, sink ){
+  final validarName = StreamTransformer<String, String>.fromHandlers(
+    handleData: ( name, sink ){
 
-      String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
-      RegExp regExp = new RegExp(pattern);
-
-      if( regExp.hasMatch( email ) ){
-        sink.add( email );
+      if ( name.length > 2) {
+        sink.add( name );
       }else{
-        sink.addError('Email no valido');
+        sink.addError('Debe ser mayo que 2 caracteres');
       }
 
     }
   );
 
-  final validarPassword = StreamTransformer<String, String>.fromHandlers(
-    handleData: ( password, sink ){
+  final validarLastname = StreamTransformer<String, String>.fromHandlers(
+    handleData: ( lastname, sink ){
       
-      if ( password.length == 4) {
-        sink.add( password );
+      if ( lastname.length > 2) {
+        sink.add( lastname );
       }else{
-        sink.addError('Pin de 4 caracteres por favor');
+        sink.addError('Debe ser mayo que 2 caracteres');
+      }
+
+    }
+  );
+
+  final validarDate = StreamTransformer<String, String>.fromHandlers(
+    handleData: ( date, sink ){
+      
+      if ( date != null) {
+        sink.add( date );
+      }else{
+        sink.addError('Fecha de nacimiento no puede ser nula');
       }
 
     }
