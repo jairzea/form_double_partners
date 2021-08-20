@@ -154,7 +154,8 @@ class RegisterAddressPage extends StatelessWidget {
         if (isConfirm) {
 
           Navigator.of(context).pop();
-          Navigator.pushNamed(context, 'profile');
+          
+          Navigator.of(context).pushNamedAndRemoveUntil('profile', (route) => false);
           
         }
         // Devolver falso para mantener el diálogo

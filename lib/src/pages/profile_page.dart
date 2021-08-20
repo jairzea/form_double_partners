@@ -113,7 +113,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
           Navigator.of(context).pop();
 
-          // Navigator.pushReplacementNamed(context, 'home');
           Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
 
          

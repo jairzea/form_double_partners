@@ -153,29 +153,24 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _crearDateBirth(FormBloc bloc, BuildContext context ) {
 
-    // return StreamBuilder(
-    //   stream: bloc.dateStream,
-    //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return Container(
-          padding: EdgeInsets.only(right: 30, left: 30),
-          child: TextField(
-            enableInteractiveSelection: false,
-            controller: _inputFieldDateController,
-            decoration: InputDecoration(
-              suffixIcon: Icon( Icons.perm_contact_calendar_rounded, color: Colors.deepPurpleAccent  ),
-              hintText: 'Fecha de nacimiento',
-              labelText: 'Fecha de nacimiento',
-            ),
-            onTap: (){
+    return Container(
+      padding: EdgeInsets.only(right: 30, left: 30),
+      child: TextField(
+        enableInteractiveSelection: false,
+        controller: _inputFieldDateController,
+        decoration: InputDecoration(
+          suffixIcon: Icon( Icons.perm_contact_calendar_rounded, color: Colors.deepPurpleAccent  ),
+          hintText: 'Fecha de nacimiento',
+          labelText: 'Fecha de nacimiento',
+        ),
+        onTap: (){
 
-              FocusScope.of( context ).requestFocus(new FocusNode());
-              _selectDate( context );
+          FocusScope.of( context ).requestFocus(new FocusNode());
+          _selectDate( context );
 
-            },
-          ),
-        );
-    //   }
-    // );
+        },
+      ),
+    );
         
   }
 
@@ -338,7 +333,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (isConfirm) {
 
           Navigator.of(context).pop();
-          Navigator.pushNamed(context, 'profile');
+          Navigator.of(context).pushNamedAndRemoveUntil('profile', (route) => false);
           
         }
         // Devolver falso para mantener el diálogo
