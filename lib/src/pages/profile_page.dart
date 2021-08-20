@@ -1,9 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:form_double_partners/src/services/db_provider.dart';
 import 'package:form_double_partners/widget/appbar_widget.dart';
 import 'package:form_double_partners/widget/button_widget.dart';
 import 'package:form_double_partners/widget/numbers_widget.dart';
 import 'package:form_double_partners/widget/profile_widget.dart';
+import 'package:sweetalert/sweetalert.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -30,13 +32,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 ProfileWidget(
                   imagePath: 'assets/images/profile.png',
                   onClicked: () async {
-                    print("editando");
+                    _showAlertLogout( context, 'Borrar datos?', '¿Desea borrar la información?');
                   },
                 ),
                 const SizedBox(height: 24),
                 buildName( user ),
                 const SizedBox(height: 24),
-                Center(child: buildUpgradeButton( user )),
+                Center(child: buildUpgradeButton( context, user )),
                 const SizedBox(height: 24),
                 NumbersWidget(),
               ],
@@ -86,12 +88,45 @@ class _ProfilePageState extends State<ProfilePage> {
     ],
   );
 
-  Widget buildUpgradeButton(user) => ButtonWidget(
+  Widget buildUpgradeButton(context, user) => ButtonWidget(
         text: 'Agregar dirección',
         onClicked: () {
           Navigator.pushNamed(context, 'registerAddress', arguments: user[0]['id'].toString() );
         },
       );
+  
+  void _showAlertLogout( BuildContext context, String title, String description ){
+
+    SweetAlert.show(
+      context,
+      title: title,
+      subtitle: description,
+      style: SweetAlertStyle.confirm,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      showCancelButton: true, onPress: (bool isConfirm) {
+        
+        if (isConfirm) {
+          
+          DBProvider.db.deleteUser();
+          DBProvider.db.deleteAddress();
+
+          Navigator.of(context).pop();
+
+          // Navigator.pushReplacementNamed(context, 'home');
+          Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+
+         
+        }else{
+
+          Navigator.of(context).pop();
+
+        }
+        // Devolver falso para mantener el diálogo
+        return false;
+      }
+    );
+  }
 
 
 }

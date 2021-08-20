@@ -23,7 +23,7 @@ class ProfileWidget extends StatelessWidget {
           Positioned(
             bottom: 0,
             right: 4,
-            child: buildEditIcon(color),
+            child: buildLogoutIcon(color),
           ),
         ],
       ),
@@ -47,14 +47,14 @@ class ProfileWidget extends StatelessWidget {
     );
   }
 
-  Widget buildEditIcon(Color color) => buildCircle(
+  Widget buildLogoutIcon(Color color) => buildCircle(
         color: Colors.white,
         all: 3,
         child: buildCircle(
           color: Colors.deepPurple,
           all: 8,
           child: Icon(
-            Icons.edit,
+            Icons.logout,
             color: Colors.white,
             size: 20,
           ),

@@ -16,11 +16,6 @@ class _Home extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    // DBProvider.db.deleteUser();
-    DBProvider.db.countAddress().then((value) => {
-      
-    });
-
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     final Responsive responsive = Responsive.of(context);

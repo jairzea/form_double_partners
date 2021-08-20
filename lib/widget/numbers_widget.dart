@@ -7,23 +7,40 @@ class NumbersWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    String prueba;
+   
+    return FutureBuilder<List<Map<String, Object?>>?>(
+      future: DBProvider.db.countAddress(),
+      builder: (_, AsyncSnapshot<List<Map<String, Object?>>?> snapshot){
 
-    DBProvider.db.countAddress().then((value) => {
-      print(value![0]['address']),
-      // prueba = value;
+        if(snapshot.hasData){
+
+          final count = snapshot.data;
+
+          return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                buildButton(context, '', ''),
+                buildDivider(),
+                buildButton(context, '${count![0]['address']}', 'Direcciones'),
+                buildDivider(),
+                buildButton(context, '', ''),
+              ],
+          );
+        
+        }else if(snapshot.hasError){
+
+          return Text('Error al cargar la información');
+
+        }else{
+
+          return Container(
+            child: Center(child: CircularProgressIndicator()),
+          );
+
+        }
+
     });
     
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          buildButton(context, '', ''),
-          buildDivider(),
-          buildButton(context, '35', 'Following'),
-          buildDivider(),
-          buildButton(context, '', ''),
-        ],
-      );
   }
 
   Widget buildDivider() => Container(

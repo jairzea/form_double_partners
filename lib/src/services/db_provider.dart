@@ -77,16 +77,7 @@ class DBProvider {
 
   }
 
-  // Actualizar una encuesta
-  Future<int?> updateEncuesta( UserModel nuevaEncuesta ) async {
-
-    final db  = await database;
-    final res = await db?.update( 'Usuario', nuevaEncuesta.toJson(), where: 'id = ?', whereArgs: [ nuevaEncuesta.id ] );
-    return res;
-
-  }
-
-  // Borrar una Encuesta
+  // Borrar datos de usuario
   Future<int?> deleteUser() async {
 
     final db  = await database;
@@ -123,6 +114,16 @@ class DBProvider {
       SELECT COUNT(direccion) AS address 
       FROM Direcciones
     ''');
+
+    return res;
+
+  }
+
+    // Borrar direcciones de usuario
+  Future<int?> deleteAddress() async {
+
+    final db  = await database;
+    final res = await db?.delete( 'Direcciones');
 
     return res;
 
