@@ -241,6 +241,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }else{
 
       final newUser = new UserModel(
+        id: 1,
         nombre : bloc.name,
         apellido : bloc.lastname,
         fechaNacimiento : _date
@@ -262,7 +263,6 @@ class _RegisterPageState extends State<RegisterPage> {
       
     }
     
-    // Navigator.pushReplacementNamed(context, 'home');
   }
 
   Widget _crearFondo(BuildContext context){
@@ -327,12 +327,23 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _showAlertExit( BuildContext context, String title, String description ) {
-
     SweetAlert.show(
       context,
       title: title,
       subtitle: description,
       style: SweetAlertStyle.success,
+      confirmButtonText: 'Ok',
+      onPress: (bool isConfirm) {
+        
+        if (isConfirm) {
+
+          Navigator.of(context).pop();
+          Navigator.pushNamed(context, 'profile');
+          
+        }
+        // Devolver falso para mantener el diálogo
+        return false;
+      }
     );
   }
 

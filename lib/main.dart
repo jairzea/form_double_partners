@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         routes: routes(),
         theme: ThemeData(
           fontFamily: 'OpenSans',
-          primaryColor: Colors.teal[300]
+          primaryColor: Colors.deepPurple
         ),
       ),
     );

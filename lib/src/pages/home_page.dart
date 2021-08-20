@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:form_double_partners/src/resources/responsive.dart';
+import 'package:form_double_partners/src/services/db_provider.dart';
 import 'package:lottie/lottie.dart';
 
 class HomePage extends StatefulWidget   {
 
    @override
   _Home createState() => _Home();
+  
 }
 
 class _Home extends State<HomePage> {
@@ -14,39 +16,95 @@ class _Home extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
+    // DBProvider.db.deleteUser();
+    DBProvider.db.countAddress().then((value) => {
+      
+    });
+
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
     final Responsive responsive = Responsive.of(context);
 
-    return SafeArea(
-      child: Scaffold(
-      
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(
-              alignment: Alignment.center,
-              image: AssetImage('assets/images/logo-dvp.png'),
-              width: 100,
+    return FutureBuilder<List<Map<String, Object?>>?>(
+      future: DBProvider.db.getUser(),
+      builder: ( context, AsyncSnapshot<List<Map<String, Object?>>?> snapshot ){
+
+        final data = snapshot.data;
+
+        if( snapshot.hasData ){
+
+          if( data!.length > 0 ){
+
+            return Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Lottie.asset(
+                    'assets/images/see-profile.json',
+                  ),
+                  CupertinoButton(
+                    color: Color.fromRGBO(41, 38, 91, 1),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Text('Ver perfil'), 
+                    onPressed: (){
+                      
+                      Navigator.pushNamed(context, 'profile');
+                      
+                    }
+                  )
+                ],
+              ),
+            );
+          
+          }else{
+
+            return SafeArea(
+            child: Scaffold(
+            
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    alignment: Alignment.center,
+                    image: AssetImage('assets/images/logo-dvp.png'),
+                    width: 100,
+                  ),
+                  SizedBox(height: height * 0.10),
+                  _startupImage(height, width, responsive),
+                  SizedBox(height: height * 0.01),
+                  _myTittle(height, width, responsive),
+                  SizedBox(height: height * 0.01),
+                  _dropDown(      responsive),
+                  SizedBox(height: height * 0.01),
+                  _options(context, height, width, responsive),
+                  SizedBox(height: height * 0.01),
+                  _myData(height, width, responsive),
+                ],
+              ),
             ),
-            SizedBox(height: height * 0.10),
-            _startupImage(height, width, responsive),
-            SizedBox(height: height * 0.01),
-            _myTittle(height, width, responsive),
-            SizedBox(height: height * 0.01),
-            _dropDown(      responsive),
-            SizedBox(height: height * 0.01),
-            _options(context, height, width, responsive),
-            SizedBox(height: height * 0.01),
-            _myData(height, width, responsive),
-          ],
-        ),
-      ),
-      
+            
+          );
+
+          }
+
+         
+        }else if(snapshot.hasError){
+
+          return Text('Error loading information');
+
+        }else{
+
+          return Container(
+            child: Center(child: CircularProgressIndicator()),
+          );
+
+        }
+      },
     );
     
-
   }
+  
 
   Widget _startupImage(double height, double width, Responsive responsive){
     return Container(
